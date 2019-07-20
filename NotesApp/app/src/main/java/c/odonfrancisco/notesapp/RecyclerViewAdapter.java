@@ -1,8 +1,11 @@
 package c.odonfrancisco.notesapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private static final String TAG = RecyclerViewAdapter.class.getSimpleName();
@@ -53,6 +58,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
 
+        viewHolder.parentLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                deleteAlertDialog(i);
+                return true;
+            }
+        });
+
     }
 
     @Override
@@ -68,5 +81,32 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             noteText = itemView.findViewById(R.id.noteText);
             parentLayout = itemView.findViewById(R.id.parentLayout);
         }
+    }
+
+    private void deleteAlertDialog(final int itemIndex){
+        new AlertDialog.Builder(this.mContext)
+                .setIcon(android.R.drawable.star_on)
+                .setTitle("Are you sure you want to delete this note?")
+                .setMessage("Deleting this is undoable")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteNote(itemIndex);
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    private void deleteNote(int index){
+        SharedPreferences sharedPreferences = activity.getSharedPreferences("c.odonfrancisco.notesapp", Context.MODE_PRIVATE);
+
+        Set<String> notesSet = sharedPreferences.getStringSet("notes", new HashSet<String>());
+
+        notesSet.remove(notesList.get(index));
+
+        sharedPreferences.edit().putStringSet("notes", notesSet).apply();
+
+        activity.recreate();
     }
 }

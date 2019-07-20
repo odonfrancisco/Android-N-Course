@@ -34,7 +34,12 @@ public class EditNoteText extends AppCompatActivity {
         Set<String> notesList = sharedPreferences.getStringSet("notes", new HashSet<String>());
         notesArrayList.addAll(notesList);
 
-        noteIndex = intent.getIntExtra("noteID",-1);
+        noteIndex = intent.getIntExtra("noteID",-2);
+
+        if (noteIndex == -1) {
+            notesArrayList.add("");
+            noteIndex = notesArrayList.size()-1;
+        }
 
         Toast.makeText(this, notesArrayList.get(noteIndex), Toast.LENGTH_SHORT).show();
 

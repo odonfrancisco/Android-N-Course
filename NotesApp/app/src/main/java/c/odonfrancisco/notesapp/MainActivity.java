@@ -9,6 +9,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -29,6 +32,30 @@ public class MainActivity extends AppCompatActivity {
                 Set<String> notes = sharedPreferences.getStringSet("notes", new HashSet<String>());
                 initializeRecyclerView(notes);
             }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.add_note_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()){
+            case R.id.newNote:
+                Intent intent = new Intent(this, EditNoteText.class);
+                intent.putExtra("noteID", -1);
+                startActivityForResult(intent, 1);
+                return true;
+            default:
+                return false;
         }
     }
 
@@ -68,5 +95,9 @@ public class MainActivity extends AppCompatActivity {
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, MainActivity.this, notesArray);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    public void deleteAlertDialog(){
+
     }
 }
