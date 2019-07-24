@@ -14,11 +14,12 @@ public class ArticleWebView extends AppCompatActivity {
         setContentView(R.layout.activity_article_web_view);
 
         Intent intent = getIntent();
-        String url = intent.getStringExtra("articleURL");
+        String url = intent.getStringExtra("content");
 
         WebView webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient());
-        webView.loadUrl(url);
+
+        webView.loadData(intent.getStringExtra("content"), "text/html", "UTF-8");
     }
 }
