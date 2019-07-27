@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v22/values-v22.xml",
+            "map": [
+                {
+                    "source": "/home/odon/.gradle/caches/transforms-2/files-2.1/ade8edde53da86eb690f6aedd9c6ecd4/res/values-v22/values-v22.xml",
+                    "from": {
+                        "startLines": "2,3,4,9",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,130,217,553",
+                        "endLines": "2,3,8,13",
+                        "endColumns": "74,86,12,12",
+                        "endOffsets": "125,212,548,896"
+                    }
+                }
+            ]
+        }
+    ]
+}

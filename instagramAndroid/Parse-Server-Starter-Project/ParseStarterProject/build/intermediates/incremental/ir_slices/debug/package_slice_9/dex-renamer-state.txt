@@ -1,0 +1,4 @@
+#Sat Jul 27 03:21:41 EDT 2019
+base.0=/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/transforms/dexMerger/debug/9
+path.0=classes.dex
+renamed.0=classes.dex
