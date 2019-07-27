@@ -1,72 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <instant-run
     abi="x86"
-    api-level="23"
+    api-level="24"
     build-mode="COLD"
-    density="xhdpi"
+    density="420dpi"
     format="10"
-    ir-eligibility="COMPATIBLE"
     plugin-version="3.4.2"
-    timestamp="1564212098972"
+    timestamp="1564246466778"
     token="4075630046301023645"
     verifier="COLD_SWAP_REQUESTED" >
 
     <task
         name="javac"
-        duration="334" />
+        duration="0" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="29" />
+        duration="0" />
     <task
         name="verifier"
-        duration="35" />
-
-    <artifact
-        location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_9.apk"
-        type="SPLIT" />
-    <artifact
-        location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/instant-run-apk/debug/ParseStarterProject-debug.apk"
-        type="SPLIT_MAIN" />
+        duration="0" />
 
     <build
         build-mode="FULL"
-        timestamp="1564211247687"
+        timestamp="1564246399262"
         verifier="FULL_BUILD_REQUESTED" >
         <artifact
-            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/dep/dependencies.apk"
-            type="SPLIT" />
-        <artifact
-            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_2.apk"
-            type="SPLIT" />
-        <artifact
             location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_1.apk"
-            type="SPLIT" />
-        <artifact
-            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_0.apk"
-            type="SPLIT" />
-        <artifact
-            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_4.apk"
-            type="SPLIT" />
-        <artifact
-            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_3.apk"
-            type="SPLIT" />
-        <artifact
-            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_5.apk"
-            type="SPLIT" />
-        <artifact
-            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_6.apk"
             type="SPLIT" />
         <artifact
             location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_7.apk"
             type="SPLIT" />
         <artifact
-            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_8.apk"
+            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_6.apk"
+            type="SPLIT" />
+        <artifact
+            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_5.apk"
+            type="SPLIT" />
+        <artifact
+            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_0.apk"
+            type="SPLIT" />
+        <artifact
+            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_3.apk"
+            type="SPLIT" />
+        <artifact
+            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_2.apk"
             type="SPLIT" />
         <artifact
             location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_9.apk"
+            type="SPLIT" />
+        <artifact
+            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_4.apk"
+            type="SPLIT" />
+        <artifact
+            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_8.apk"
+            type="SPLIT" />
+        <artifact
+            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/dep/dependencies.apk"
             type="SPLIT" />
         <artifact
             location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/instant-run-apk/debug/ParseStarterProject-debug.apk"
@@ -74,15 +66,7 @@
     </build>
     <build
         build-mode="COLD"
-        ir-eligibility="COMPATIBLE"
-        timestamp="1564212098972"
-        verifier="COLD_SWAP_REQUESTED" >
-        <artifact
-            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/split-apk/debug/slices/slice_9.apk"
-            type="SPLIT" />
-        <artifact
-            location="/home/odon/AndroidStudioProjects/Android N Dev Course/instagramAndroid/Parse-Server-Starter-Project/ParseStarterProject/build/intermediates/instant-run-apk/debug/ParseStarterProject-debug.apk"
-            type="SPLIT_MAIN" />
-    </build>
+        timestamp="1564246466778"
+        verifier="COLD_SWAP_REQUESTED" />
 
 </instant-run>
