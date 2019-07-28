@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
 import com.parse.Parse;
@@ -24,6 +25,9 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.SignUpCallback;
+
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -49,18 +53,129 @@ public class MainActivity extends AppCompatActivity {
 //      }
 //    });
 
-    ParseQuery<ParseObject> query = ParseQuery.getQuery("Score");
+//    ParseQuery<ParseObject> query = ParseQuery.getQuery("Score");
+//
+//    query.getInBackground("RyuhdUWyMN", new GetCallback<ParseObject>() {
+//      @Override
+//      public void done(ParseObject parseObject, ParseException e) {
+//        if (e == null && parseObject != null){
+//
+//          parseObject.put("score", 203);
+//          parseObject.saveInBackground();
+//
+//          Log.i("ObjectValue", parseObject.getString("username"));
+//          Log.i("ObjectValue", Integer.toString(parseObject.getInt("score")));
+//
+//        } else {
+//          Log.i("ObjectValue", "Failed to retrieve object value");
+//        }
+//      }
+//    });
 
-    query.getInBackground("dEBW5J05xmzJ", new GetCallback<ParseObject>() {
-      @Override
-      public void done(ParseObject parseObject, ParseException e) {
-        if (e == null && parseObject != null){
-          Log.i("ObjectValue", parseObject.getString("username"));
-          Log.i("ObjectValue", Integer.toString(parseObject.getInt("score")));
+//    ParseObject tweet = new ParseObject("Tweet");
+//    tweet.put("username", "chreast");
+//    tweet.put("tweet", "Yeast Infection");
+//
+//    tweet.saveInBackground(new SaveCallback() {
+//      @Override
+//      public void done(ParseException e) {
+//        if (e == null) {
+//          Log.i("Tweet Status", "Saved Successfully");
+//        } else {
+//          Log.i("Tweet Status", "Failed to save");
+//        }
+//      }
+//    });
 
-        }
-      }
-    });
+
+//    ParseQuery<ParseObject> tweetQuery = ParseQuery.getQuery("Tweet");
+//    tweetQuery.getInBackground("FQBlk2vv3z", new GetCallback<ParseObject>() {
+//      @Override
+//      public void done(ParseObject parseObject, ParseException e) {
+//        if (e == null && parseObject != null){
+//
+//          parseObject.put("tweet", "yeast is no longer an infection");
+//          parseObject.saveInBackground();
+//
+//
+//          Log.i("Tweet Retrieved", "Username: " + parseObject.get("username"));
+//
+//          Log.i("Tweet Retrieved", "Tweet: " + parseObject.get("tweet"));
+//        } else {
+//          Log.i("Tweet Retrieved", "Failed to retrieve tweet");
+//        }
+//      }
+//    });
+
+
+    // Advanced Queries
+//
+//    ParseQuery<ParseObject> query = ParseQuery.getQuery("Score");
+//
+//    query.whereGreaterThan("score", 200);
+//
+//    query.findInBackground(new FindCallback<ParseObject>() {
+//      @Override
+//      public void done(List<ParseObject> list, ParseException e) {
+//        if (e == null) {
+//          Log.i("findInBackground", "Retrieved " + list.size() + " objects");
+//
+//          if (list.size() > 0) {
+//            for(ParseObject object : list){
+//              Log.i("findInBackgroundResult", object.getString("username"));
+//              Log.i("findInBackgroundResult", Integer.toString(object.getInt("score")));
+//
+////              object.put("score", object.getInt("score") + 50);
+////              object.saveInBackground();
+//
+//              Log.i("updated score", Integer.toString(object.getInt("score")));
+//            }
+//          }
+//        }
+//      }
+//    });
+
+    // create user
+
+//    ParseUser user = new ParseUser();
+//
+//    user.setUsername("odon");
+//    user.setPassword("chreast");
+//
+//    user.signUpInBackground(new SignUpCallback() {
+//      @Override
+//      public void done(ParseException e) {
+//        if (e == null){
+//          Log.i("Signup", "successful");
+//        } else {
+//          Log.i("Signup", "Failed");
+//        }
+//      }
+//    });
+//
+
+    // log in user
+//    ParseUser.logInInBackground("odon", "chreast", new LogInCallback() {
+//      @Override
+//      public void done(ParseUser parseUser, ParseException e) {
+//        if (parseUser != null){
+//          Log.i("Login", "succesful");
+//        } else {
+//          Log.i("Login", "Failed " + e.toString());
+//        }
+//      }
+//    });
+
+    // log out user
+    ParseUser.logOut();
+
+    // check if user is logged in
+    if(ParseUser.getCurrentUser() != null){
+      Log.i("currentUser", "User logged in " + ParseUser.getCurrentUser().getUsername());
+    } else {
+      Log.i("currentUser", "User not logged in");
+    }
+
 
     ParseAnalytics.trackAppOpenedInBackground(getIntent());
   }
