@@ -19,7 +19,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 
-public class    StarterApplication extends Application {
+public class StarterApplication extends Application {
 
   @Override
   public void onCreate() {
