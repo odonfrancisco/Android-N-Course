@@ -14,7 +14,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -72,6 +74,7 @@ public class UsersListActivity extends AppCompatActivity {
 
                 object.put("image", file);
                 object.put("username", ParseUser.getCurrentUser().getUsername());
+                object.put("userID", ParseUser.getCurrentUser().getObjectId());
 
                 object.saveInBackground(new SaveCallback() {
                     @Override
@@ -107,6 +110,10 @@ public class UsersListActivity extends AppCompatActivity {
                 getPhoto();
             }
         }
+        if(item.getItemId() == R.id.logout){
+            ParseUser.logOut();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -118,6 +125,7 @@ public class UsersListActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.usersList);
         usersList = new ArrayList<>();
+        final ArrayList<String> idList = new ArrayList<>();
 
         ParseQuery<ParseUser> userQuery = ParseUser.getQuery();
 
@@ -128,11 +136,9 @@ public class UsersListActivity extends AppCompatActivity {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
                 if(e == null && objects.size() > 0) {
-//                    usersList = objects;
                     for (ParseUser user : objects) {
                         usersList.add(user.getUsername());
-                        Log.i("UserInfo", user.toString());
-                        Log.i("Username", user.getUsername());
+                        idList.add(user.getObjectId());
                     }
                 } else {
                     Log.i("Error retrieving users", e.getLocalizedMessage());
@@ -143,7 +149,14 @@ public class UsersListActivity extends AppCompatActivity {
             }
         });
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
+                intent.putExtra("id", idList.get(position));
 
-
+                startActivity(intent);
+            }
+        });
     }
 }
