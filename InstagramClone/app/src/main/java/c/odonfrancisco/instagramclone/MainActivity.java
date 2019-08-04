@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements View.OnKeyListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setTitle("Instagram");
+
         textView = findViewById(R.id.signUpToggle);
         passwordEditText = findViewById(R.id.password);
         logInButton = findViewById(R.id.logInButton);

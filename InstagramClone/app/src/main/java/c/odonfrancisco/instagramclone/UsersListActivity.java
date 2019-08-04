@@ -123,6 +123,8 @@ public class UsersListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_list);
 
+        setTitle("User Feed");
+
         listView = findViewById(R.id.usersList);
         usersList = new ArrayList<>();
         final ArrayList<String> idList = new ArrayList<>();

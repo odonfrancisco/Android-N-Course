@@ -43,6 +43,8 @@ public class UserProfileActivity extends AppCompatActivity {
             user = query.get(getIntent().getStringExtra("id"));
             Toast.makeText(getApplicationContext(), "User found: " + user.getUsername(), Toast.LENGTH_SHORT).show();
 
+            setTitle(user.getUsername().toUpperCase() + "'s Feed");
+
             getUserPhotos();
 
         } catch (ParseException e) {
@@ -66,7 +68,7 @@ public class UserProfileActivity extends AppCompatActivity {
                         image.getDataInBackground(new GetDataCallback() {
                             @Override
                             public void done(byte[] data, ParseException e) {
-                                if (e == null) {
+                                if (e == null & data != null) {
 //                                    ImageView iv = new ImageView(getApplicationContext());
 
                                     Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
