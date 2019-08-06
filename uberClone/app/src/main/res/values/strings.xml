@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">uberClone</string>
+    <string name="title_activity_rider">RiderActivity</string>
 </resources>

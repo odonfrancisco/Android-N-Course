@@ -1,5 +1,6 @@
 package c.odonfrancisco.uberclone;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -54,17 +55,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.driverRiderSwitch).setOnClickListener(this);
         findViewById(R.id.startButton).setOnClickListener(this);
 
-        exampleObject.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null){
-                    Log.i("ParseSave", "successful");
-                } else {
-                    Log.i("ParseSave", "Failed");
-                }
-            }
-        });
-
         ParseAnalytics.trackAppOpenedInBackground(getIntent());
     }
 
@@ -72,9 +62,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if((boolean) ParseUser.getCurrentUser().get("driver")){
             Log.i("Redirecting as", "Driver");
         } else {
+            Intent intent = new Intent(getApplicationContext(), RiderActivity.class);
+            intent.putExtra("driver", driver);
+            startActivity(intent);
             Log.i("Redirecting as", "Rider");
         }
-
     }
 
     private boolean anonymousLogin(){
