@@ -19,20 +19,24 @@
 
     <Switch
         android:id="@+id/driverRiderSwitch"
-        android:layout_below="@+id/uberLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Switch"/>
+        android:layout_below="@+id/uberLogo"
+        android:layout_marginTop="21dp"
+        android:text="Rider" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/uberLogo"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="24dp"
         android:layout_toRightOf="@id/driverRiderSwitch"
-        android:text="Driver"/>
+        android:text="Driver" />
 
 
     <Button
+        android:id="@+id/startButton"
         android:layout_below="@+id/driverRiderSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
