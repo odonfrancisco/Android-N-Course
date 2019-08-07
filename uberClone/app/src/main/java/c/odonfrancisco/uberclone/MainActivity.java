@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.parse.SaveCallback;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private boolean driver;
+    private Button requestUberButton;
 
     @Override
     public void onClick(View v) {
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } break;
             case R.id.startButton : {
                 anonymousLogin();
-            }
+            } break;
         }
     }
 
