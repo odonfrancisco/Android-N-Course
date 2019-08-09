@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -30,6 +32,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RiderActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
@@ -103,7 +106,7 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000,0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000,120, locationListener);
         }
     }
 
@@ -142,8 +145,9 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
             requestUberButton.setText("Cancel Uber");
 
             ParseObject newRequest = new ParseObject("Request");
-            newRequest.put("userID", ParseUser.getCurrentUser().getObjectId());
-            newRequest.put("userLocation", userLatLng.toString());
+            newRequest.put("riderID", ParseUser.getCurrentUser().getObjectId());
+            newRequest.put("driverID", "");
+            newRequest.put("riderLocation", userLatLng.toString());
 
             newRequest.saveInBackground(new SaveCallback() {
                 @Override
@@ -159,7 +163,7 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
             requestUberButton.setText("Request Uber");
 
             ParseQuery query = new ParseQuery<ParseObject>("Request");
-            query.whereEqualTo("userID", ParseUser.getCurrentUser().getObjectId());
+            query.whereEqualTo("riderID", ParseUser.getCurrentUser().getObjectId());
 
 
             query.findInBackground(new FindCallback() {
@@ -171,7 +175,19 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
                 @Override
                 public void done(Object o, Throwable throwable) {
                     Log.i("object", o.toString());
-
+                    ArrayList<ParseObject> arrayList = (ArrayList) o;
+                    if (arrayList.size() == 1) {
+                        arrayList.get(0).deleteInBackground(new DeleteCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if (e == null){
+                                    Log.i("Deleted Object", "Deleted Successfully");
+                                } else {
+                                    Log.i("Deleted Object", "Deletion Failed");
+                                }
+                            }
+                        });
+                    }
                 }
             });
         }
