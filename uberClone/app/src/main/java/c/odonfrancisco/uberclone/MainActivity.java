@@ -61,14 +61,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void getStarted(){
+        Intent intent;
         if((boolean) ParseUser.getCurrentUser().get("driver")){
             Log.i("Redirecting as", "Driver");
+            intent = new Intent(getApplicationContext(), DriverActivity.class);
+
         } else {
-            Intent intent = new Intent(getApplicationContext(), RiderActivity.class);
-            intent.putExtra("driver", driver);
-            startActivity(intent);
+            intent = new Intent(getApplicationContext(), RiderActivity.class);
             Log.i("Redirecting as", "Rider");
         }
+        startActivity(intent);
     }
 
     private boolean anonymousLogin(){

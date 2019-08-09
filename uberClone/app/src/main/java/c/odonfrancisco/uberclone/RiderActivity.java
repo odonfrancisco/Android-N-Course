@@ -27,6 +27,7 @@ import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -40,14 +41,35 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private LatLng userLatLng;
+    private Location userLocation;
     private Button requestUberButton;
     private boolean uberRequested = false;
+
+
+    /**
+     * Manipulates the map once available.
+     * This callback is triggered when the map is ready to be used.
+     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * we just add a marker near Sydney, Australia.
+     * If Google Play services is not installed on the device, the user will be prompted to install
+     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * installed Google Play services and returned to the app.
+     */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // Add a marker in Sydney and move the camera
+//        LatLng sydney = new LatLng(-34, 151);
+//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        setLocationListener();
+    }
 
     @Override
     public void onClick(View view){
         if(view.getId() == requestUberButton.getId()){
-            requestUber();
+            onUberButtonPressed();
         }
     }
 
@@ -74,6 +96,20 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
 
         requestUberButton = findViewById(R.id.requestUberButton);
         requestUberButton.setOnClickListener(this);
+
+        ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Request");
+        query.whereEqualTo("riderID", ParseUser.getCurrentUser().getObjectId());
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null) {
+                    if(objects.size() > 0){
+                        requestUberButton.setText(R.string.cancel_uber);
+                        uberRequested = true;
+                    }
+                }
+            }
+        });
     }
 
     private void setLocationListener(){
@@ -83,7 +119,7 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
             @Override
             public void onLocationChanged(Location location) {
                 Log.i("locationToString", location.toString());
-                userLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                userLocation = location;
                 setUserMarker();
             }
 
@@ -111,43 +147,28 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
     }
 
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        setLocationListener();
-    }
-
     private void setUserMarker(){
-        if(userLatLng != null){
+        if(userLocation != null){
+            LatLng userLatLng = new LatLng(userLocation.getLatitude(), userLocation.getLongitude());
+
+            mMap.clear();
             mMap.addMarker(new MarkerOptions().position(userLatLng).title("It's you!!"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(userLatLng));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 9));
         } else {
             Log.i("SetUserMarker" , "Called Prematurely");
         }
     }
 
-    private void requestUber(){
+    private void onUberButtonPressed(){
         if(!uberRequested){
-            requestUberButton.setText("Cancel Uber");
+            requestUberButton.setText(R.string.cancel_uber);
 
+            ParseGeoPoint parseGeoPoint = new ParseGeoPoint(userLocation.getLatitude(), userLocation.getLongitude());
             ParseObject newRequest = new ParseObject("Request");
             newRequest.put("riderID", ParseUser.getCurrentUser().getObjectId());
             newRequest.put("driverID", "");
-            newRequest.put("riderLocation", userLatLng.toString());
+            newRequest.put("driverLocation", new ParseGeoPoint());
+            newRequest.put("riderLocation", parseGeoPoint);
 
             newRequest.saveInBackground(new SaveCallback() {
                 @Override
@@ -160,7 +181,7 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
                 }
             });
         } else {
-            requestUberButton.setText("Request Uber");
+            requestUberButton.setText(R.string.request_uber);
 
             ParseQuery query = new ParseQuery<ParseObject>("Request");
             query.whereEqualTo("riderID", ParseUser.getCurrentUser().getObjectId());
@@ -168,31 +189,24 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
 
             query.findInBackground(new FindCallback() {
                 @Override
-                public void done(List objects, ParseException e) {
-                    Log.i("objects", objects.get(0).toString());
+                public void done(Object o, Throwable throwable){
+                    if(throwable == null){
+//                        Log.i("objects", o.get(0).toString());
+                        ArrayList<ParseObject> arrayList = (ArrayList) o;
+                        for(ParseObject object : arrayList){
+                            object.deleteInBackground();
+                        }
+
+                    }
                 }
 
                 @Override
-                public void done(Object o, Throwable throwable) {
-                    Log.i("object", o.toString());
-                    ArrayList<ParseObject> arrayList = (ArrayList) o;
-                    if (arrayList.size() == 1) {
-                        arrayList.get(0).deleteInBackground(new DeleteCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e == null){
-                                    Log.i("Deleted Object", "Deleted Successfully");
-                                } else {
-                                    Log.i("Deleted Object", "Deletion Failed");
-                                }
-                            }
-                        });
-                    }
+                public void done(List objects, ParseException e) {
+
                 }
             });
         }
         uberRequested = !uberRequested;
-
     }
 
 }
