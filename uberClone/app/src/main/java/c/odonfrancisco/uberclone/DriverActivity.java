@@ -48,8 +48,10 @@ public class DriverActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), DriverMapActivity.class);
                 ParseGeoPoint riderRequest = (ParseGeoPoint) ((ParseObject) requestsList.get(position)).get("riderLocation");
-                intent.putExtra("riderLat", String.valueOf(riderRequest.getLatitude()));
-                intent.putExtra("riderLong", String.valueOf(riderRequest.getLongitude()));
+                intent.putExtra("riderLat", riderRequest.getLatitude());
+                intent.putExtra("riderLong", riderRequest.getLongitude());
+                intent.putExtra("driverLat", userLocation.getLatitude());
+                intent.putExtra("driverLong", userLocation.getLongitude());
 
                 startActivity(intent);
             }

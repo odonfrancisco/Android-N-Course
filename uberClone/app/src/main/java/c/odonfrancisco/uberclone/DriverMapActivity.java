@@ -1,20 +1,34 @@
 package c.odonfrancisco.uberclone;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private FusedLocationProviderClient fusedLocationClient;
     private GoogleMap mMap;
+    private Location driverLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +38,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        Intent intent = getIntent();
-        LatLng riderLatLng = new LatLng(Double.parseDouble(intent.getStringExtra("riderLat")), Double.parseDouble(intent.getStringExtra("riderLong")));
-
-        Log.i("Intent Location",riderLatLng.latitude + " " + riderLatLng.longitude);
-
     }
 
 
@@ -46,9 +54,30 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        Intent intent = getIntent();
+        LatLng riderLatLng = new LatLng(intent.getDoubleExtra("riderLat", 0), intent.getDoubleExtra("riderLong", 0));
+        LatLng driverLatLng = new LatLng(intent.getDoubleExtra("driverLat", 0), intent.getDoubleExtra("driverLong", 0));
+
+        setMapMarkers(mMap, driverLatLng, riderLatLng);
+        setMapBounds(mMap, driverLatLng, riderLatLng);
     }
+
+    private void setMapMarkers(GoogleMap map, LatLng driverLatLng, LatLng riderLatLng){
+        map.clear();
+        map.addMarker(new MarkerOptions().position(driverLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)).title("Your Location"));
+        map.addMarker(new MarkerOptions().position(riderLatLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Rider Location"));
+    }
+
+    private void setMapBounds(GoogleMap map, LatLng driverLatLng, LatLng riderLatLng){
+        LatLngBounds.Builder bounds = new LatLngBounds.Builder();
+        bounds.include(driverLatLng);
+        bounds.include(riderLatLng);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), displayMetrics.widthPixels, 250, 0));
+    }
+
 }
