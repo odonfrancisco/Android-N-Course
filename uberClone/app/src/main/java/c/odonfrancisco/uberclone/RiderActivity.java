@@ -167,7 +167,7 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
             ParseObject newRequest = new ParseObject("Request");
             newRequest.put("riderID", ParseUser.getCurrentUser().getObjectId());
             newRequest.put("driverID", "");
-            newRequest.put("driverLocation", new ParseGeoPoint());
+//            newRequest.put("driverLocation", new ParseGeoPoint());
             newRequest.put("riderLocation", parseGeoPoint);
 
             newRequest.saveInBackground(new SaveCallback() {
@@ -177,6 +177,7 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
                         Log.i("Request saved", "Successfully");
                     } else {
                         Log.i("Request saved", "Failed");
+                        e.printStackTrace();
                     }
                 }
             });

@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -24,20 +27,32 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
 
     private FusedLocationProviderClient fusedLocationClient;
     private GoogleMap mMap;
-    private Location driverLocation;
+    Button acceptRideButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_map);
+        acceptRideButton = findViewById(R.id.acceptButton);
+        acceptRideButton.setOnClickListener(this);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    public void onClick(View view){
+        switch(view.getId()){
+            case R.id.acceptButton: {
+                acceptRide();
+            }
+        }
     }
 
 
@@ -53,7 +68,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
 
         Intent intent = getIntent();
         LatLng riderLatLng = new LatLng(intent.getDoubleExtra("riderLat", 0), intent.getDoubleExtra("riderLong", 0));
@@ -79,5 +93,26 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
         map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), displayMetrics.widthPixels, 250, 0));
     }
+
+    // Here I need to redirect to Google Maps...
+    private void acceptRide(){
+        String riderLatLngString =
+                getIntent().getDoubleExtra("riderLat", 0)
+                + "," +
+                getIntent().getDoubleExtra("riderLong", 0);
+
+        Log.i("RiderLatLng", riderLatLngString);
+
+        Uri gmIntentUri = Uri.parse("google.navigation:q=" + riderLatLngString);
+
+        Intent googleMapsIntent = new Intent(Intent.ACTION_VIEW, gmIntentUri);
+        googleMapsIntent.setPackage("com.google.android.apps.maps");
+        if(googleMapsIntent.resolveActivity(getPackageManager()) != null){
+            startActivity(googleMapsIntent);
+        }
+
+    }
+
+
 
 }
