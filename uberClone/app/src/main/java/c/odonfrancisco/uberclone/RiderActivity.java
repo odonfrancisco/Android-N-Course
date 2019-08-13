@@ -1,6 +1,7 @@
 package c.odonfrancisco.uberclone;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -70,6 +71,8 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
     public void onClick(View view){
         if(view.getId() == requestUberButton.getId()){
             onUberButtonPressed();
+        } else if(view.getId() == R.id.logoutButton){
+            logoutUser();
         }
     }
 
@@ -96,6 +99,7 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
 
         requestUberButton = findViewById(R.id.requestUberButton);
         requestUberButton.setOnClickListener(this);
+        findViewById(R.id.logoutButton).setOnClickListener(this);
 
         ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Request");
         query.whereEqualTo("riderID", ParseUser.getCurrentUser().getObjectId());
@@ -208,6 +212,12 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
             });
         }
         uberRequested = !uberRequested;
+    }
+
+    private void logoutUser(){
+        ParseUser.logOut();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
     }
 
 }

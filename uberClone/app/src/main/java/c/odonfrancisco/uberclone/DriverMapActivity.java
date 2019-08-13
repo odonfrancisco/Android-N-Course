@@ -26,12 +26,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
 
     private FusedLocationProviderClient fusedLocationClient;
     private GoogleMap mMap;
     Button acceptRideButton;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +74,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        Intent intent = getIntent();
+        intent = getIntent();
         LatLng riderLatLng = new LatLng(intent.getDoubleExtra("riderLat", 0), intent.getDoubleExtra("riderLong", 0));
         LatLng driverLatLng = new LatLng(intent.getDoubleExtra("driverLat", 0), intent.getDoubleExtra("driverLong", 0));
 
@@ -96,6 +101,14 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     // Here I need to redirect to Google Maps...
     private void acceptRide(){
+        ParseQuery<ParseObject> query = new ParseQuery<>("Request");
+        query.getInBackground(intent.getStringExtra("requestID"), new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+
+            }
+        });
+
         String riderLatLngString =
                 getIntent().getDoubleExtra("riderLat", 0)
                 + "," +

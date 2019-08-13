@@ -35,6 +35,8 @@ public class DriverActivity extends AppCompatActivity {
     private LocationListener locationListener;
     Location userLocation;
     ArrayList<ParseObject> requestsList;
+    ArrayList<String> distanceList;
+    ArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class DriverActivity extends AppCompatActivity {
         setContentView(R.layout.activity_driver);
 
         requestListView = findViewById(R.id.requestsListView);
+        distanceList = new ArrayList<>();
 
         requestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -52,10 +55,14 @@ public class DriverActivity extends AppCompatActivity {
                 intent.putExtra("riderLong", riderRequest.getLongitude());
                 intent.putExtra("driverLat", userLocation.getLatitude());
                 intent.putExtra("driverLong", userLocation.getLongitude());
+                intent.putExtra("requestID", requestsList.get(position).getObjectId());
 
                 startActivity(intent);
             }
         });
+
+        adapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1, distanceList);
+        requestListView.setAdapter(adapter);
 
         getRequests();
         setLocationListener();
@@ -110,8 +117,8 @@ public class DriverActivity extends AppCompatActivity {
     }
 
     private void setListView(){
-        ArrayList<String> distanceList = new ArrayList<>();
         if (requestsList != null && requestsList.size() > 0) {
+            distanceList.clear();
             for(ParseObject request : requestsList){
                 distanceList.add(getRequestDistance(request));
             }
@@ -119,9 +126,7 @@ public class DriverActivity extends AppCompatActivity {
             distanceList.add("No New Requests at this time");
         }
 
-        ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(),android.R.layout.simple_list_item_1, distanceList);
-        requestListView.setAdapter(adapter);
-
+        adapter.notifyDataSetChanged();
     }
 
     private String getRequestDistance(ParseObject request){
