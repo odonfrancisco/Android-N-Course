@@ -99,7 +99,6 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), displayMetrics.widthPixels, 250, 0));
     }
 
-    // Here I need to redirect to Google Maps...
     private void acceptRide(){
         ParseQuery<ParseObject> query = new ParseQuery<>("Request");
         query.getInBackground(intent.getStringExtra("requestID"), new GetCallback<ParseObject>() {

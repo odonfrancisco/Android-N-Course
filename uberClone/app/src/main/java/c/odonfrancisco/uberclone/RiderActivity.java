@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.DeleteCallback;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -45,6 +46,7 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
     private Location userLocation;
     private Button requestUberButton;
     private boolean uberRequested = false;
+    private String requestID;
 
 
     /**
@@ -68,11 +70,17 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        logoutUser();
+    }
+
+    @Override
     public void onClick(View view){
         if(view.getId() == requestUberButton.getId()){
             onUberButtonPressed();
         } else if(view.getId() == R.id.logoutButton){
-            logoutUser();
+            logoutButtonPressed();
         }
     }
 
@@ -168,7 +176,7 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
             requestUberButton.setText(R.string.cancel_uber);
 
             ParseGeoPoint parseGeoPoint = new ParseGeoPoint(userLocation.getLatitude(), userLocation.getLongitude());
-            ParseObject newRequest = new ParseObject("Request");
+            final ParseObject newRequest = new ParseObject("Request");
             newRequest.put("riderID", ParseUser.getCurrentUser().getObjectId());
             newRequest.put("driverID", "");
 //            newRequest.put("driverLocation", new ParseGeoPoint());
@@ -178,7 +186,8 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
                 @Override
                 public void done(ParseException e) {
                     if (e == null){
-                        Log.i("Request saved", "Successfully");
+                        Log.i("Request saved", "Request ID: " + newRequest.getObjectId());
+                        requestID = newRequest.getObjectId();
                     } else {
                         Log.i("Request saved", "Failed");
                         e.printStackTrace();
@@ -214,10 +223,32 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
         uberRequested = !uberRequested;
     }
 
-    private void logoutUser(){
-        ParseUser.logOut();
+    private void logoutButtonPressed(){
+        logoutUser();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
+    }
+
+    private void logoutUser(){
+        if(requestID != null){
+            ParseQuery<ParseObject> query = new ParseQuery<>("Request");
+            query.getInBackground(requestID, new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject object, ParseException e) {
+                    if(e == null){
+                        try {
+                            object.delete();
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                        }
+                    } else {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            requestID = null;
+        }
+        ParseUser.logOut();
     }
 
 }
