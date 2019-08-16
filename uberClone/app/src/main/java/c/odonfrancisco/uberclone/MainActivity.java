@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         user.put("driver", driver);
                         getStarted();
+                    } else {
+                        e.printStackTrace();
                     }
                 }
             });

@@ -30,6 +30,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
 
@@ -104,7 +105,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         query.getInBackground(intent.getStringExtra("requestID"), new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
-
+                object.put("driverID", ParseUser.getCurrentUser().getObjectId());
+                object.saveInBackground();
             }
         });
 

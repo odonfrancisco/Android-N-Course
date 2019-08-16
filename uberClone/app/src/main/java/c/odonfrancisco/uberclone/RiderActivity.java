@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -47,6 +49,8 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
     private Button requestUberButton;
     private boolean uberRequested = false;
     private String requestID;
+    Handler handler = new Handler();
+    TextView infoTextView;
 
 
     /**
@@ -105,6 +109,7 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        infoTextView = findViewById(R.id.infoTextView);
         requestUberButton = findViewById(R.id.requestUberButton);
         requestUberButton.setOnClickListener(this);
         findViewById(R.id.logoutButton).setOnClickListener(this);
@@ -118,10 +123,50 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
                     if(objects.size() > 0){
                         requestUberButton.setText(R.string.cancel_uber);
                         uberRequested = true;
+                        requestID = objects.get(0).getObjectId();
                     }
                 }
             }
         });
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("handler.postDelayed", "Called");
+                checkForUpdates();
+            }
+        }, 2000);
+    }
+
+    private void checkForUpdates(){
+        if(requestID != null){
+            Log.i("checkForUpdates", "requestID not null");
+            ParseQuery<ParseObject> query = new ParseQuery<>("Request");
+            query.getInBackground(requestID, new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject object, ParseException e) {
+                    if(e == null){
+                        Log.i("checkForUpdates done", (String) object.get("driverID"));
+                        if(String.valueOf(object.get("driverID")).equals("")){
+                            infoTextView.setText("");
+                            requestUberButton.setVisibility(View.VISIBLE);
+                        } else {
+                            infoTextView.setText("Driver is on the way");
+                            requestUberButton.setVisibility(View.INVISIBLE);
+                        }
+
+                    }
+                }
+            });
+        }
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("handler.postDelayed", "Called inside checkUp");
+                boolean requestIdExists = requestID.isEmpty();
+                Log.i("requestID is empty", String.valueOf(requestIdExists));
+                checkForUpdates();
+            }
+        }, 2000);
     }
 
     private void setLocationListener(){
@@ -188,6 +233,7 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
                     if (e == null){
                         Log.i("Request saved", "Request ID: " + newRequest.getObjectId());
                         requestID = newRequest.getObjectId();
+                        checkForUpdates();
                     } else {
                         Log.i("Request saved", "Failed");
                         e.printStackTrace();
@@ -230,7 +276,7 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
     }
 
     private void logoutUser(){
-        if(requestID != null){
+        if(requestID != null && uberRequested){
             ParseQuery<ParseObject> query = new ParseQuery<>("Request");
             query.getInBackground(requestID, new GetCallback<ParseObject>() {
                 @Override
@@ -247,6 +293,7 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
                 }
             });
             requestID = null;
+            uberRequested = false;
         }
         ParseUser.logOut();
     }

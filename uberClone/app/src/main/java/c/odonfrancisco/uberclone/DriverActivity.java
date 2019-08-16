@@ -20,11 +20,13 @@ import android.widget.ListView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,12 @@ public class DriverActivity extends AppCompatActivity {
     ArrayAdapter adapter;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ParseUser.logOut();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver);
@@ -50,7 +58,7 @@ public class DriverActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), DriverMapActivity.class);
-                ParseGeoPoint riderRequest = (ParseGeoPoint) ((ParseObject) requestsList.get(position)).get("riderLocation");
+                ParseGeoPoint riderRequest = (ParseGeoPoint) (requestsList.get(position)).get("riderLocation");
                 intent.putExtra("riderLat", riderRequest.getLatitude());
                 intent.putExtra("riderLong", riderRequest.getLongitude());
                 intent.putExtra("driverLat", userLocation.getLatitude());
@@ -91,6 +99,7 @@ public class DriverActivity extends AppCompatActivity {
                 Log.i("locationToString", location.toString());
                 userLocation = location;
                 setListView();
+                ParseUser.getCurrentUser().put("location", new ParseGeoPoint(location.getLatitude(), location.getLongitude()));
             }
 
             @Override
