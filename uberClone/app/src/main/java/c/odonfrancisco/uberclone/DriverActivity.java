@@ -12,6 +12,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -41,9 +44,29 @@ public class DriverActivity extends AppCompatActivity {
     ArrayAdapter adapter;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        switch (item.getItemId()){
+            case R.id.menuLogoutOption: {
+                logoutUser(false);
+            }
+        }
+        return true;
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
-        ParseUser.logOut();
+        logoutUser(true);
     }
 
     @Override
@@ -168,6 +191,12 @@ public class DriverActivity extends AppCompatActivity {
 
     }
 
-
+    private void logoutUser(boolean backButtonPressed){
+        ParseUser.logOut();
+        if(!backButtonPressed){
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        }
+    }
 
 }
