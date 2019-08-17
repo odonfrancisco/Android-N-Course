@@ -157,16 +157,14 @@ public class RiderActivity extends FragmentActivity implements OnMapReadyCallbac
                     }
                 }
             });
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Log.i("handler.postDelayed", "Called inside checkUp");
+                    checkForUpdates();
+                }
+            }, 2000);
         }
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Log.i("handler.postDelayed", "Called inside checkUp");
-                boolean requestIdExists = requestID.isEmpty();
-                Log.i("requestID is empty", String.valueOf(requestIdExists));
-                checkForUpdates();
-            }
-        }, 2000);
     }
 
     private void setLocationListener(){

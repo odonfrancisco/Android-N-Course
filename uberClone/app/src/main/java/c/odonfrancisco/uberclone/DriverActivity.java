@@ -128,7 +128,7 @@ public class DriverActivity extends AppCompatActivity {
     private void setListView(){
         if (requestsList != null && requestsList.size() > 0) {
             distanceList.clear();
-            for(ParseObject request : requestsList){
+            for (ParseObject request : requestsList) {
                 distanceList.add(getRequestDistance(request));
             }
         } else {
@@ -155,6 +155,7 @@ public class DriverActivity extends AppCompatActivity {
                 if (e == null) {
                     requestsList = new ArrayList();
                     requestsList.addAll(objects);
+//                    setListView();
                 } else {
                     if(requestsList == null){
                         requestsList = new ArrayList<>();
