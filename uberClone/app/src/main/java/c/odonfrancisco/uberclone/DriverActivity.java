@@ -155,7 +155,9 @@ public class DriverActivity extends AppCompatActivity {
                 if (e == null) {
                     requestsList = new ArrayList();
                     requestsList.addAll(objects);
-//                    setListView();
+                    if(userLocation != null){
+                        setListView();
+                    }
                 } else {
                     if(requestsList == null){
                         requestsList = new ArrayList<>();
