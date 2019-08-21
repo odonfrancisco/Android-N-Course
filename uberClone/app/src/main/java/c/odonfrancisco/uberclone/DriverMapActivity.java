@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
@@ -27,7 +28,9 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -36,6 +39,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private FusedLocationProviderClient fusedLocationClient;
     private GoogleMap mMap;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
     Button acceptRideButton;
     Intent intent;
 
@@ -50,6 +55,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        setLocationListener();
     }
 
     @Override
@@ -100,13 +107,45 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         map.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), displayMetrics.widthPixels, 250, 0));
     }
 
+    public void setLocationListener(){
+        locationManager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                ParseGeoPoint parseGeoPoint = new ParseGeoPoint(location.getLatitude(), location.getLongitude());
+                ParseUser.getCurrentUser().put("location", parseGeoPoint);
+                ParseUser.getCurrentUser().saveInBackground();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+    }
+
     private void acceptRide(){
         ParseQuery<ParseObject> query = new ParseQuery<>("Request");
         query.getInBackground(intent.getStringExtra("requestID"), new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
-                object.put("driverID", ParseUser.getCurrentUser().getObjectId());
-                object.saveInBackground();
+                if (e == null) {
+                    object.put("driverID", ParseUser.getCurrentUser().getObjectId());
+                    object.saveInBackground();
+                } else {
+                    e.printStackTrace();
+                }
             }
         });
 

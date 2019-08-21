@@ -30,6 +30,7 @@ import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,6 +124,17 @@ public class DriverActivity extends AppCompatActivity {
                 userLocation = location;
                 setListView();
                 ParseUser.getCurrentUser().put("location", new ParseGeoPoint(location.getLatitude(), location.getLongitude()));
+                ParseUser.getCurrentUser().saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            Log.i("UserSaved", "Location Saved Correctly");
+                        } else {
+                            Log.i("UserSaved", "Location Not Saved");
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
 
             @Override
