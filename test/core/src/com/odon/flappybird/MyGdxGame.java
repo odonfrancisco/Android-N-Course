@@ -2,9 +2,13 @@ package com.odon.flappybird;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Random;
 
@@ -13,17 +17,20 @@ import sun.rmi.runtime.Log;
 public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture background;
+	ShapeRenderer shapeRenderer;
 
 	Texture[] birds;
 	int flapState = 0;
 	float birdY = 0;
 	float velocity = 0;
+	Circle birdCircle = new Circle();
 
 	Texture[] pipes;
 	float topPipeY;
 	int numberOfPipes = 4;
 	float[] pipeX = new float[numberOfPipes];
 	float[] tubeOffset = new float[numberOfPipes];
+	Rectangle[] pipeRectangles = new Rectangle[numberOfPipes];
 
 	int gameState = 0;
 	float gravity = 3/2;
@@ -38,6 +45,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+		shapeRenderer = new ShapeRenderer();
+
 		background = new Texture("bg.png");
 		birds = new Texture[2];
         birds[0] = new Texture("bird.png");
@@ -64,6 +73,8 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void render () {
 		batch.begin();
 		batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+		shapeRenderer.setColor(Color.RED);
 
 		if (gameState != 0) {
 
@@ -74,10 +85,16 @@ public class MyGdxGame extends ApplicationAdapter {
 			for (int i = 0; i < numberOfPipes; i++ ){
 				if(pipeX[i] < - pipes[0].getWidth()){
 					pipeX[i] += numberOfPipes * distanceBetweenTubes;
+					tubeOffset[i] = (randomGenerator.nextFloat() - 0.5f) * (Gdx.graphics.getHeight() - pipeGap - 200);
 				} else {
 					pipeX[i] = pipeX[i] - tubeVelocity;
 					batch.draw(pipes[0], pipeX[i], topPipeY + tubeOffset[i]);
 					batch.draw(pipes[1], pipeX[i], topPipeY - pipeGap - pipes[1].getHeight() + tubeOffset[i]);
+//					shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+//					shapeRenderer.setColor(Color.MAGENTA);
+					shapeRenderer.rect(pipeX[i], topPipeY + tubeOffset[i], pipes[0].getWidth(), pipes[0].getHeight());
+					shapeRenderer.rect(pipeX[i], topPipeY - pipeGap - pipes[1].getHeight() + tubeOffset[i], pipes[1].getWidth(), pipes[0].getHeight());
+//					shapeRenderer.end();
 				}
 			}
 
@@ -103,6 +120,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		float birdx = Gdx.graphics.getWidth()/2 - birds[flapState].getWidth()/2;
 		batch.draw(birds[flapState], birdx, birdY);
 		batch.end();
+
+		birdCircle.set(Gdx.graphics.getWidth()/2, birdY + birds[flapState].getHeight() / 2, birds[flapState].getWidth() / 2);
+
+		shapeRenderer.circle(birdCircle.x, birdCircle.y, birdCircle.radius);
+		shapeRenderer.end();
 	}
 	
 	@Override
