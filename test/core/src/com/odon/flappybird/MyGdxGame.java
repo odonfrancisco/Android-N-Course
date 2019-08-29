@@ -33,6 +33,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private float[] tubeOffset = new float[numberOfPipes];
 	private Rectangle[] bottomPipeRectangles = new Rectangle[numberOfPipes];
 	private Rectangle[] topPipeRectangles = new Rectangle[numberOfPipes];
+	private int scoringTube = 0;
 
 	private int gameState = 0;
 	private float gravity = 3/2;
@@ -40,6 +41,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private float maxTubeOffset;
 	private Random randomGenerator;
 	private float tubeVelocity = 4;
+	private int score = 0;
 
 	private float distanceBetweenTubes;
 
@@ -85,7 +87,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		if (gameState != 0) {
 
 			if(Gdx.input.justTouched()){
-				velocity = -30;
+				velocity = -20;
 			}
 
 			for (int i = 0; i < numberOfPipes; i++ ){
@@ -94,6 +96,17 @@ public class MyGdxGame extends ApplicationAdapter {
 					tubeOffset[i] = (randomGenerator.nextFloat() - 0.5f) * (Gdx.graphics.getHeight() - pipeGap - 200);
 				} else {
 					pipeX[i] = pipeX[i] - tubeVelocity;
+
+					if(pipeX[scoringTube] < Gdx.graphics.getWidth() - birds[0].getWidth()){
+						score ++;
+						Gdx.app.log("score", score + "");
+						if(scoringTube < 3){
+							scoringTube ++;
+						} else {
+							scoringTube = 0;
+						}
+					}
+
 				}
 				batch.draw(pipes[0], pipeX[i], topPipeY + tubeOffset[i]);
 				batch.draw(pipes[1], pipeX[i], topPipeY - pipeGap - pipes[1].getHeight() + tubeOffset[i]);
@@ -112,7 +125,7 @@ public class MyGdxGame extends ApplicationAdapter {
 //					shapeRenderer.end();
 
 				if(Intersector.overlaps(birdCircle, topPipeRectangles[i]) || Intersector.overlaps(birdCircle, bottomPipeRectangles[i])){
-					Gdx.app.log("Collision", "Collision truth");
+//					Gdx.app.log("Collision", "Collision truth");
 				}
 			}
 
