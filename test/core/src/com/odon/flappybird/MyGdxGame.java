@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
@@ -34,6 +35,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private Rectangle[] bottomPipeRectangles = new Rectangle[numberOfPipes];
 	private Rectangle[] topPipeRectangles = new Rectangle[numberOfPipes];
 	private int scoringTube = 0;
+	private BitmapFont font;
 
 	private int gameState = 0;
 	private float gravity = 3/2;
@@ -50,6 +52,9 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
+		font = new BitmapFont();
+		font.setColor(Color.WHITE);
+		font.getData().setScale(10);
 
 		background = new Texture("bg.png");
 		birds = new Texture[2];
@@ -97,7 +102,7 @@ public class MyGdxGame extends ApplicationAdapter {
 				} else {
 					pipeX[i] = pipeX[i] - tubeVelocity;
 
-					if(pipeX[scoringTube] < Gdx.graphics.getWidth() - birds[0].getWidth()){
+					if(pipeX[scoringTube] < Gdx.graphics.getWidth() + birds[0].getWidth()/2){
 						score ++;
 						Gdx.app.log("score", score + "");
 						if(scoringTube < 3){
@@ -150,6 +155,9 @@ public class MyGdxGame extends ApplicationAdapter {
 
 		float birdx = Gdx.graphics.getWidth()/2 - birds[flapState].getWidth()/2;
 		batch.draw(birds[flapState], birdx, birdY);
+
+        font.draw(batch, String.valueOf(score), 100, 200);
+
 		batch.end();
 
 
