@@ -2,6 +2,7 @@ package com.odon.flappybird;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -48,6 +49,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	private float distanceBetweenTubes;
 
+	Preferences prefs;
 
 	@Override
 	public void create () {
@@ -72,6 +74,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		randomGenerator = new Random();
 		distanceBetweenTubes = Gdx.graphics.getWidth() * 3/4;
 
+		prefs = Gdx.app.getPreferences("flappyPref");
+
 		startGame();
 	}
 
@@ -79,7 +83,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		birdY = Gdx.graphics.getHeight()/2 - birds[flapState].getHeight()/2;
 		for (int i = 0; i < numberOfPipes; i ++){
 			tubeOffset[i] = (randomGenerator.nextFloat() - 0.5f) * (Gdx.graphics.getHeight() - pipeGap - 200);
-			pipeX[i] = Gdx.graphics.getWidth() - pipes[1].getWidth() + i * distanceBetweenTubes ;
+			pipeX[i] = Gdx.graphics.getWidth() + pipes[1].getWidth() + i * distanceBetweenTubes ;
 			topPipeRectangles[i] = new Rectangle();
 			bottomPipeRectangles[i] = new Rectangle();
 		}
@@ -155,6 +159,12 @@ public class MyGdxGame extends ApplicationAdapter {
 			}
 		} else if (gameState == 2) {
 			batch.draw(gameOver, Gdx.graphics.getWidth() / 2 - gameOver.getWidth()/2, Gdx.graphics.getHeight()/2 - gameOver.getHeight()/2	);
+			if(prefs.getInteger("highScore") < score){
+				prefs.putInteger("highScore", score);
+				prefs.flush();
+			}
+
+			font.draw(batch, "HS " + prefs.getInteger("highScore"), 250, 200);
 
 			if(Gdx.input.justTouched()){
 				gameState = 1;
