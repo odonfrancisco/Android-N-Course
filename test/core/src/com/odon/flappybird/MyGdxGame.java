@@ -20,6 +20,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	private SpriteBatch batch;
 	private Texture background;
 	private ShapeRenderer shapeRenderer;
+	private Texture gameOver;
 
 	private Texture[] birds;
 	private int flapState = 0;
@@ -52,6 +53,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
+		gameOver = new Texture("flappybirdgameover.png");
 		font = new BitmapFont();
 		font.setColor(Color.WHITE);
 		font.getData().setScale(10);
@@ -60,7 +62,6 @@ public class MyGdxGame extends ApplicationAdapter {
 		birds = new Texture[2];
         birds[0] = new Texture("bird.png");
         birds[1] = new Texture("bird2.png");
-		birdY = Gdx.graphics.getHeight()/2 - birds[flapState].getHeight()/2;
 
 		pipes = new Texture[2];
 		pipes[0] = new Texture("toptube.png");
@@ -71,6 +72,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		randomGenerator = new Random();
 		distanceBetweenTubes = Gdx.graphics.getWidth() * 3/4;
 
+		startGame();
+	}
+
+	private void startGame(){
+		birdY = Gdx.graphics.getHeight()/2 - birds[flapState].getHeight()/2;
 		for (int i = 0; i < numberOfPipes; i ++){
 			tubeOffset[i] = (randomGenerator.nextFloat() - 0.5f) * (Gdx.graphics.getHeight() - pipeGap - 200);
 			pipeX[i] = Gdx.graphics.getWidth() - pipes[1].getWidth() + i * distanceBetweenTubes ;
@@ -89,7 +95,7 @@ public class MyGdxGame extends ApplicationAdapter {
 		birdCircle.set(Gdx.graphics.getWidth()/2, birdY + birds[flapState].getHeight() / 2, birds[flapState].getWidth() / 2);
 //		shapeRenderer.circle(birdCircle.x, birdCircle.y, birdCircle.radius);
 
-		if (gameState != 0) {
+		if (gameState == 1) {
 
 			if(Gdx.input.justTouched()){
 				velocity = -20;
@@ -131,18 +137,31 @@ public class MyGdxGame extends ApplicationAdapter {
 
 				if(Intersector.overlaps(birdCircle, topPipeRectangles[i]) || Intersector.overlaps(birdCircle, bottomPipeRectangles[i])){
 //					Gdx.app.log("Collision", "Collision truth");
+					gameState = 2;
 				}
 			}
 
 
-			if (birdY > 0 || velocity < 0) {
+			if (birdY > 0) {
 				velocity += gravity;
 				birdY -= velocity;
+			} else {
+				gameState = 2;
 			}
 
-		} else {
+		} else if (gameState == 0) {
 			if(Gdx.input.justTouched()){
 				gameState = 1;
+			}
+		} else if (gameState == 2) {
+			batch.draw(gameOver, Gdx.graphics.getWidth() / 2 - gameOver.getWidth()/2, Gdx.graphics.getHeight()/2 - gameOver.getHeight()/2	);
+
+			if(Gdx.input.justTouched()){
+				gameState = 1;
+				startGame();
+				score = 0;
+				scoringTube = 0;
+				velocity = 0;
 			}
 		}
 
