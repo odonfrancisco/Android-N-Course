@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/bluetoothOff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="turnBluetoothOff"
+        android:text="Turn Bluetooth Off"
+        tools:layout_editor_absoluteX="5dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <Button
+        android:id="@+id/discoverableButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bluetoothOff"
+        android:onClick="findDiscoverableDevices"
+        android:text="Find Discoverable Devices" />
+
+    <Button
+        android:id="@+id/pairedDevicesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/discoverableButton"
+        android:onClick="viewPairedDevices"
+        android:text="View Paired devicesl" />
+
+    <ListView
+        android:id="@+id/pairedDevicesListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pairedDevicesButton"/>
+</RelativeLayout>
